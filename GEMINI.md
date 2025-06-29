@@ -21,7 +21,10 @@ This document summarizes the key challenges, decisions, and solutions encountere
             1.  Created a virtual environment: `python3 -m venv venv`
             2.  Activated the virtual environment (e.g., `source venv/bin/activate`)
             3.  Installed `solidpython` and `ezdxf` within the activated `venv` using `./venv/bin/pip install solidpython ezdxf`.
-            4.  Troubleshot `pkg_resources` import errors by reinstalling `setuptools` within the virtual environment (`./venv/bin/pip install --upgrade setuptools`).
+            4.  **Problem:** `pkg_resources` import errors and `NameError` (e.g., `SCREW_OFFSET` not defined in `generate_lasercut_case.py`) occurred due to `from config import *` and the way `make` executes scripts, leading to scope issues or outdated `pkg_resources`.
+            5.  **Solution:**
+                *   For `pkg_resources` errors: Ensured `pip` and `setuptools` are fully updated within the virtual environment (`./venv/bin/pip install --upgrade pip setuptools`).
+                *   For `NameError` (scope issues): Modified all Python scripts to explicitly `import config` and access parameters as `config.PARAMETER_NAME`. This makes parameter access explicit and avoids scope ambiguities.
     *   **Understanding `venv`:** A virtual environment creates an isolated Python installation for a specific project. This prevents dependency conflicts between different projects and keeps the global Python environment clean. When activated, shell commands like `python` and `pip` point to the versions within the `venv`.
 
 ## 3. Library Conflicts and Code Refinements

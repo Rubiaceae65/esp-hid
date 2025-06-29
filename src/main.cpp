@@ -1,6 +1,8 @@
 #include <Arduino.h>
 #include "config.h"
 
+#pragma message("config.h included!")
+
 #include "USB.h"
 #include "USBHIDMouse.h"
 #include <BleKeyboard.h>
@@ -83,23 +85,6 @@ static void usbEventCallback(void *arg, esp_event_base_t event_base, int32_t eve
         Serial.println();
         break;
       case ARDUINO_USB_CDC_RX_OVERFLOW_EVENT: Serial.printf("CDC RX Overflow of %d bytes", data->rx_overflow.dropped_bytes); break;
-
-      default: break;
-    }
-  } else if (event_base == ARDUINO_USB_HID_EVENTS) {
-    arduino_usb_hid_event_data_t *data = (arduino_usb_hid_event_data_t *)event_data;
-    switch (event_id) {
-      case ARDUINO_USB_HID_SET_PROTOCOL_EVENT: Serial.printf("HID SET PROTOCOL: %s\n", data->set_protocol.protocol ? "REPORT" : "BOOT"); break;
-      case ARDUINO_USB_HID_SET_IDLE_EVENT:     Serial.printf("HID SET IDLE: %u\n", data->set_idle.idle_rate); break;
-
-      default: break;
-    }
-  } else if (event_base == ARDUINO_USB_HID_KEYBOARD_EVENTS) {
-    arduino_usb_hid_keyboard_event_data_t *data = (arduino_usb_hid_keyboard_event_data_t *)event_data;
-    switch (event_id) {
-      case ARDUINO_USB_HID_KEYBOARD_LED_EVENT:
-        Serial.printf("HID KEYBOARD LED: NumLock:%u, CapsLock:%u, ScrollLock:%u\n", data->numlock, data->capslock, data->scrolllock);
-        break;
 
       default: break;
     }
