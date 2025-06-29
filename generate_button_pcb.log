@@ -1,0 +1,10 @@
+WARNING: KICAD8_SYMBOL_DIR environment variable is missing, so the default KiCad symbol libraries won't be searched. @ [/home/user/notes/esp-hid/<frozen importlib._bootstrap_external>:1026=>/home/user/notes/esp-hid/<frozen importlib._bootstrap>:488]
+WARNING: KICAD6_SYMBOL_DIR environment variable is missing, so the default KiCad symbol libraries won't be searched. @ [/home/user/notes/esp-hid/<frozen importlib._bootstrap_external>:1026=>/home/user/notes/esp-hid/<frozen importlib._bootstrap>:488]
+WARNING: KICAD_SYMBOL_DIR environment variable is missing, so the default KiCad symbol libraries won't be searched. @ [/home/user/notes/esp-hid/<frozen importlib._bootstrap_external>:1026=>/home/user/notes/esp-hid/<frozen importlib._bootstrap>:488]
+WARNING: KICAD7_SYMBOL_DIR environment variable is missing, so the default KiCad symbol libraries won't be searched. @ [/home/user/notes/esp-hid/<frozen importlib._bootstrap_external>:1026=>/home/user/notes/esp-hid/<frozen importlib._bootstrap>:488]
+ERROR: Can't open file: Connector_Generic:Conn_01x08.
+ @ [/home/user/notes/esp-hid/generate_button_pcb.py:83=>/home/user/notes/esp-hid/generate_button_pcb.py:19]
+WARNING: Could not load KiCad schematic library "Connector_Generic:Conn_01x08", falling back to backup library. @ [/home/user/notes/esp-hid/generate_button_pcb.py:83=>/home/user/notes/esp-hid/generate_button_pcb.py:19]
+ERROR: Can't open file: Connector:Conn_01x08.
+ @ [/home/user/notes/esp-hid/generate_button_pcb.py:83=>/home/user/notes/esp-hid/generate_button_pcb.py:23]
+WARNING: Could not load KiCad schematic library "Connector:Conn_01x08", falling back to backup library. @ [/home/user/notes/esp-hid/generate_button_pcb.py:83=>/home/user/notes/esp-hid/generate_button_pcb.py:23]

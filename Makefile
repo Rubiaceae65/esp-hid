@@ -1,4 +1,4 @@
-.PHONY: all firmware 3d_case lasercut_case renderings bom_estimates clean
+.PHONY: all firmware 3d_case lasercut_case renderings bom_estimates pcb_design clean
 
 # Define Python interpreter from the virtual environment
 PYTHON := ./venv/bin/python
@@ -21,9 +21,11 @@ RENDER_LASERCUT_TOP_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_top.svg
 RENDER_LASERCUT_BOTTOM_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_bottom.svg
 RENDER_LASERCUT_FRONT_BACK_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_front_back.svg
 RENDER_LASERCUT_LEFT_RIGHT_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_left_right.svg
+NETLIST_FILE := button_pcb.net
+LAYOUT_FILE := button_pcb_layout.txt
 
 # Default target: build firmware and generate all case files and renderings
-all: firmware 3d_case lasercut_case renderings bom_estimates
+all: firmware 3d_case lasercut_case renderings bom_estimates pcb_design
 
 # Target to build the ESP32 firmware
 firmware:
@@ -50,6 +52,11 @@ bom_estimates: generate_bom_and_estimates.py
 	@echo "Generating BOM and estimates..."
 	$(PYTHON) generate_bom_and_estimates.py
 
+# Target to generate PCB design files
+pcb_design: generate_button_pcb.py
+	@echo "Generating PCB design files..."
+	$(PYTHON) generate_button_pcb.py
+
 # Create renderings directory if it doesn't exist
 $(RENDERINGS_DIR):
 	mkdir -p $(RENDERINGS_DIR)
@@ -59,6 +66,7 @@ clean:
 	@echo "Cleaning up generated files..."
 	rm -f $(SCAD_BASE) $(SCAD_LID)
 	rm -f $(DXF_TOP) $(DXF_BOTTOM) $(DXF_FRONT_BACK) $(DXF_LEFT_RIGHT)
+	rm -f $(NETLIST_FILE) $(LAYOUT_FILE)
 	rm -rf $(RENDERINGS_DIR)
 	/home/user/.local/bin/pio run --target clean
 	rm -rf venv

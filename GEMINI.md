@@ -47,7 +47,14 @@ This document summarizes the key challenges, decisions, and solutions encountere
     *   Encountered `Page` object unit errors (`type object 'Units' has no attribute 'MM'`, `Page.__init__() got multiple values for argument 'units'`). Resolved by correctly importing `Units` from `ezdxf.addons.drawing.layout` and passing `units=Units.mm` correctly to the `Page` constructor.
     *   Automated conversion of SVG to PNG using `ImageMagick`'s `convert` command was implemented in `render_cases.py` to ensure all renderings are in PNG format for consistent display in `README.md`.
 
-## 5. Git Management
+## 5. Bill of Materials (BOM) and Estimates
+
+*   **BOM Generation:** Created `generate_bom_and_estimates.py` to generate a Bill of Materials.
+*   **Material Usage and Time Estimates:** The script calculates estimated filament usage and print time for 3D printed parts, and estimated acrylic usage and cut time for laser-cut parts.
+    *   **Refinement:** Initial 3D print volume calculation was inaccurate (bounding box volume). This was corrected by approximating the material volume based on outer dimensions, hollow space, and infill percentage.
+*   **Placeholder Fields:** Added placeholder fields for `price_per_unit` and `shop_link` in the BOM to facilitate manual price research and ordering.
+
+## 6. Git Management
 
 *   **Submodule Handling:** Initially, cloned libraries were treated as nested Git repositories, causing `git add .` to fail. This was resolved by:
     *   Moving the existing library directories to temporary locations.
