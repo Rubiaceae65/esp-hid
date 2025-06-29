@@ -49,13 +49,13 @@ LID_SCREW_STANDOFF_HEIGHT = 5
 # --- BOM Generation ---
 def generate_bom():
     bom = {
-        "ESP32-S3 LOLIN S3 Mini": {"quantity": 1, "notes": "Main microcontroller board"},
-        "Momentary Footswitches": {"quantity": 7, "notes": "For keyboard/mouse inputs"},
-        "M3 Screws (for case assembly)": {"quantity": 4, "notes": f"Length depends on LID_SCREW_STANDOFF_HEIGHT ({LID_SCREW_STANDOFF_HEIGHT}mm) + WALL_THICKNESS ({WALL_THICKNESS}mm)"},
-        "M2.5 or M3 Screws (for board mounting)": {"quantity": 4, "notes": f"Length depends on BOARD_STANDOFF_HEIGHT ({BOARD_STANDOFF_HEIGHT}mm)"},
-        "Wires": {"quantity": "~2 meters", "notes": "For connecting buttons to ESP32"},
-        "Acrylic Sheet (for laser cut case)": {"quantity": "See material usage", "notes": f"Thickness: {MATERIAL_THICKNESS}mm"},
-        "PLA/PETG Filament (for 3D printed case)": {"quantity": "See material usage", "notes": ""},
+        "ESP32-S3 LOLIN S3 Mini": {"quantity": 1, "notes": "Main microcontroller board", "price_per_unit": "", "shop_link": ""},
+        "Momentary Footswitches": {"quantity": 7, "notes": "For keyboard/mouse inputs", "price_per_unit": "", "shop_link": ""},
+        "M3 Screws (for case assembly)": {"quantity": 4, "notes": f"Length depends on LID_SCREW_STANDOFF_HEIGHT ({LID_SCREW_STANDOFF_HEIGHT}mm) + WALL_THICKNESS ({WALL_THICKNESS}mm)", "price_per_unit": "", "shop_link": ""},
+        "M2.5 or M3 Screws (for board mounting)": {"quantity": 4, "notes": f"Length depends on BOARD_STANDOFF_HEIGHT ({BOARD_STANDOFF_HEIGHT}mm)", "price_per_unit": "", "shop_link": ""},
+        "Wires": {"quantity": "~2 meters", "notes": "For connecting buttons to ESP32", "price_per_unit": "", "shop_link": ""},
+        "Acrylic Sheet (for laser cut case)": {"quantity": "See material usage", "notes": f"Thickness: {MATERIAL_THICKNESS}mm", "price_per_unit": "", "shop_link": ""},
+        "PLA/PETG Filament (for 3D printed case)": {"quantity": "See material usage", "notes": "", "price_per_unit": "", "shop_link": ""},
     }
     return bom
 
