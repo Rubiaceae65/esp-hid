@@ -1,4 +1,4 @@
-.PHONY: all firmware 3d_case lasercut_case renderings clean
+.PHONY: all firmware 3d_case lasercut_case renderings bom_estimates clean
 
 # Define Python interpreter from the virtual environment
 PYTHON := ./venv/bin/python
@@ -23,7 +23,7 @@ RENDER_LASERCUT_FRONT_BACK_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_front_ba
 RENDER_LASERCUT_LEFT_RIGHT_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_left_right.svg
 
 # Default target: build firmware and generate all case files and renderings
-all: firmware 3d_case lasercut_case renderings
+all: firmware 3d_case lasercut_case renderings bom_estimates
 
 # Target to build the ESP32 firmware
 firmware:
@@ -44,6 +44,11 @@ lasercut_case: generate_lasercut_case.py
 renderings: $(RENDERINGS_DIR) $(SCAD_BASE) $(SCAD_LID) $(DXF_TOP) $(DXF_BOTTOM) $(DXF_FRONT_BACK) $(DXF_LEFT_RIGHT) render_cases.py
 	@echo "Generating case renderings..."
 	$(PYTHON) render_cases.py
+
+# Target to generate BOM and estimates
+bom_estimates: generate_bom_and_estimates.py
+	@echo "Generating BOM and estimates..."
+	$(PYTHON) generate_bom_and_estimates.py
 
 # Create renderings directory if it doesn't exist
 $(RENDERINGS_DIR):
