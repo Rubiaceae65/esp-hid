@@ -1,0 +1,6 @@
+[submodule "lib/ESP32-BLE-Keyboard"]
+	path = lib/ESP32-BLE-Keyboard
+	url = git@github.com:Rubiaceae65/ESP32-BLE-Keyboard.git
+[submodule "lib/ESP32-BLE-Mouse"]
+	path = lib/ESP32-BLE-Mouse
+	url = git@github.com:Rubiaceae65/ESP32-BLE-Mouse.git
