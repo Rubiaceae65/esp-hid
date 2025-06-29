@@ -124,6 +124,52 @@ To generate PNG renderings of all case parts for display in this README, run the
 ![Laser-Cut Case Front/Back](renderings/esp32_lasercut_case_front_back.png)
 ![Laser-Cut Case Left/Right](renderings/esp32_lasercut_case_left_right.png)
 
+## PCB Design
+
+This project includes a script to generate a conceptual PCB layout and a KiCad-compatible netlist for the button array.
+
+### Generating PCB Design Files
+
+To generate the PCB design files, ensure you have activated your Python virtual environment (as described in "Software Setup" -> "Generating Case Models"). Then run:
+
+```bash
+./venv/bin/python generate_button_pcb.py
+```
+
+This will create the following files in the project root:
+*   `button_pcb.net`: A KiCad-compatible netlist file.
+*   `button_pcb_layout.txt`: A text file describing the conceptual layout of the buttons.
+
+### Circuit Diagram
+
+Here is a conceptual circuit diagram for the button PCB:
+
+![Button Circuit Diagram](renderings/button_circuit_diagram.png)
+
+### Using PCB Design Files in KiCad
+
+1.  **Open KiCad:** Launch KiCad EDA software.
+2.  **Create/Open Project:** Create a new KiCad project or open an existing one.
+3.  **Import Netlist (Eeschema):**
+    *   Open the Schematic Editor (Eeschema).
+    *   Go to `File > Import Netlist...` and select the `button_pcb.net` file.
+    *   This will add the components (buttons and connector) to your schematic.
+4.  **Annotate and Assign Footprints (Eeschema):**
+    *   Annotate the components if necessary.
+    *   Assign appropriate footprints to each component. The netlist suggests:
+        *   Buttons: `Button_SMD_6x6mm:SW_Push_6mm`
+        *   Connector: `Connector_PinHeader_2.54mm:PinHeader_1x08_P2.54mm`
+    *   You may need to browse your KiCad footprint libraries to find these or similar ones.
+5.  **Generate Netlist (Eeschema):** After assigning footprints, generate a new netlist from Eeschema (`Tools > Generate Netlist...`). This step is crucial to update the netlist with footprint information.
+6.  **Update PCB from Schematic (Pcbnew):**
+    *   Open the PCB Layout Editor (Pcbnew).
+    *   Go to `Tools > Update PCB from Schematic...`.
+    *   This will import the components with their assigned footprints onto the PCB layout.
+7.  **Arrange Components (Pcbnew):** Use the `button_pcb_layout.txt` file as a guide to arrange the buttons and the connector on the PCB.
+8.  **Route Traces (Pcbnew):** Connect the pads of the components according to the netlist.
+9.  **Add Board Outline (Pcbnew):** Define the board's shape.
+10. **Generate Gerbers (Pcbnew):** Once the layout is complete, generate the Gerber files for manufacturing (`File > Plot...`).
+
 ## Usage
 
 *   **USB Connection:** Plug the ESP32-S3 into your computer. It will be recognized as a keyboard and mouse.

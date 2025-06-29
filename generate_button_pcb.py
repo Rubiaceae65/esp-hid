@@ -1,3 +1,6 @@
+import os
+import graphviz
+
 # Define the number of buttons
 NUM_BUTTONS = 7
 
@@ -90,6 +93,30 @@ def generate_conceptual_layout():
 
     print(f"Generated conceptual layout: {layout_fname}")
 
+# --- Circuit Diagram Rendering ---
+def render_circuit_diagram():
+    dot = graphviz.Digraph(comment='Button PCB Circuit', format='png')
+    dot.attr(rankdir='LR') # Left to Right layout
+
+    # Add ESP32 Connector
+    dot.node('J1', 'ESP32 Connector\n(J1)', shape='box')
+
+    # Add Buttons
+    for i in range(NUM_BUTTONS):
+        dot.node(f'SW{i+1}', f'Button {i+1}\n(SW{i+1})', shape='box')
+
+    # Add Connections
+    for i in range(NUM_BUTTONS):
+        # Button to GPIO
+        dot.edge(f'SW{i+1}', 'J1', label=f'GPIO{BUTTON_GPIO_PINS[i]}')
+        # Button to GND
+        dot.edge(f'SW{i+1}', 'J1', label='GND')
+
+    output_path = os.path.join("renderings", "button_circuit_diagram")
+    dot.render(output_path, view=False, cleanup=True)
+    print(f"Generated circuit diagram: {output_path}.png")
+
 if __name__ == "__main__":
     generate_button_pcb_netlist()
     generate_conceptual_layout()
+    render_circuit_diagram()
