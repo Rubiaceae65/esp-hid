@@ -6,51 +6,13 @@ import ezdxf
 from ezdxf.addons.drawing import RenderContext, Frontend
 from ezdxf.addons.drawing.svg import SVGBackend
 from ezdxf.addons.drawing.layout import Page, Units
-
-# Import case generation scripts to reuse parameters and functions
-# We'll re-define parameters here for clarity and to avoid circular imports if needed
-
-# Case parameters (from generate_case.py and generate_lasercut_case.py)
-CASE_LENGTH = 150
-CASE_WIDTH = 100
-CASE_HEIGHT = 30
-WALL_THICKNESS = 2
-MATERIAL_THICKNESS = 3 # For laser cutting
-
-BOARD_LENGTH = 34.3
-BOARD_WIDTH = 25.4
-
-FOOTSWITCH_MOUNT_DIAMETER = 12
-FOOTSWITCH_CAP_DIAMETER = 16
-FOOTSWITCH_DEPTH = 20
-
-BUTTON_HOLE_DIAMETER = 6
-BUTTON_SPACING = 15
-
-USB_C_WIDTH = 10
-USB_C_HEIGHT = 5
-USB_C_DEPTH = 7
-USB_C_OFFSET_FROM_BOTTOM = 5
-
-LED_HOLE_DIAMETER = 3
-LED_OFFSET_X = 10
-LED_OFFSET_Y = 10
-
-BOARD_STANDOFF_DIAMETER = 4
-BOARD_STANDOFF_HEIGHT = 5
-BOARD_STANDOFF_SCREW_DIAMETER = 2.5
-
-SCREW_DIAMETER = 3.2
-SCREW_OFFSET = 5
-SCREW_HEAD_DIAMETER = 6
-SCREW_HOLE_DEPTH = 5
-LID_SCREW_STANDOFF_HEIGHT = 5
+from config import *
 
 # --- BOM Generation ---
 def generate_bom():
     bom = {
         "ESP32-S3 LOLIN S3 Mini": {"quantity": 1, "notes": "Main microcontroller board", "price_per_unit": "", "shop_link": ""},
-        "Momentary Footswitches": {"quantity": 7, "notes": "For keyboard/mouse inputs", "price_per_unit": "", "shop_link": ""},
+        "Momentary Footswitches": {"quantity": NUM_BUTTONS, "notes": "For keyboard/mouse inputs", "price_per_unit": "", "shop_link": ""},
         "M3 Screws (for case assembly)": {"quantity": 4, "notes": f"Length depends on LID_SCREW_STANDOFF_HEIGHT ({LID_SCREW_STANDOFF_HEIGHT}mm) + WALL_THICKNESS ({WALL_THICKNESS}mm)", "price_per_unit": "", "shop_link": ""},
         "M2.5 or M3 Screws (for board mounting)": {"quantity": 4, "notes": f"Length depends on BOARD_STANDOFF_HEIGHT ({BOARD_STANDOFF_HEIGHT}mm)", "price_per_unit": "", "shop_link": ""},
         "Wires": {"quantity": "~2 meters", "notes": "For connecting buttons to ESP32", "price_per_unit": "", "shop_link": ""},
@@ -74,29 +36,24 @@ def calculate_3d_print_estimates():
     # Calculate volume of lid part
     lid_outer_volume = CASE_LENGTH * CASE_WIDTH * (CASE_HEIGHT / 2) # Outer dimensions of lid part
     lid_inner_hollow_volume = (CASE_LENGTH - 2 * WALL_THICKNESS) * (CASE_WIDTH - 2 * WALL_THICKNESS) * (CASE_HEIGHT / 2 - WALL_THICKNESS)
-    footswitch_hole_volume = 7 * (3.14159 * (FOOTSWITCH_MOUNT_DIAMETER / 2)**2 * (WALL_THICKNESS + FOOTSWITCH_DEPTH))
+    footswitch_hole_volume = NUM_BUTTONS * (3.14159 * (FOOTSWITCH_MOUNT_DIAMETER / 2)**2 * (WALL_THICKNESS + FOOTSWITCH_DEPTH))
     led_hole_volume = 3.14159 * (LED_HOLE_DIAMETER / 2)**2 * (WALL_THICKNESS + 0.1)
     lid_screw_through_hole_volume = 4 * (3.14159 * (SCREW_DIAMETER / 2)**2 * (WALL_THICKNESS + 0.1))
 
     # Approximate material volume for base and lid
     # This is a simplified approach assuming a certain infill for the main body and solid features
-    infill_percentage = 0.20 # 20% infill
 
     # Volume of the main hollowed out parts
     base_hollow_volume = base_outer_volume - base_inner_hollow_volume - usb_cutout_volume
     lid_hollow_volume = lid_outer_volume - lid_inner_hollow_volume - footswitch_hole_volume - led_hole_volume - lid_screw_through_hole_volume
 
     # Total material volume
-    total_material_volume_mm3 = (base_hollow_volume + lid_hollow_volume) * infill_percentage + standoff_volume + lid_screw_standoff_volume
+    total_material_volume_mm3 = (base_hollow_volume + lid_hollow_volume) * INFILL_PERCENTAGE + standoff_volume + lid_screw_standoff_volume
 
     # Rough estimates
-    filament_density_g_mm3 = 1.24e-3 # PLA density (g/mm^3)
-    filament_cost_per_kg = 20 # USD
-    printing_speed_mm3_s = 20 # Very rough average printing speed
-
-    total_weight_g = total_material_volume_mm3 * filament_density_g_mm3
-    total_cost_usd = (total_weight_g / 1000) * filament_cost_per_kg
-    estimated_print_time_hours = (total_material_volume_mm3 / printing_speed_mm3_s) / 3600
+    total_weight_g = total_material_volume_mm3 * FILAMENT_DENSITY_G_MM3
+    total_cost_usd = (total_weight_g / 1000) * FILAMENT_COST_PER_KG
+    estimated_print_time_hours = (total_material_volume_mm3 / PRINTING_SPEED_MM3_S) / 3600
 
     return {
         "total_volume_mm3": total_material_volume_mm3,
@@ -128,11 +85,8 @@ def calculate_laser_cut_estimates():
         total_perimeter_mm += perimeter
 
     # Rough estimates for laser cutting
-    laser_cut_speed_mm_s = 10 # Very rough average cutting speed
-    acrylic_cost_per_mm2 = 0.0001 # Very rough cost per mm^2 for 3mm acrylic
-
-    total_cost_usd = total_area_mm2 * acrylic_cost_per_mm2
-    estimated_cut_time_minutes = (total_perimeter_mm / laser_cut_speed_mm_s) / 60
+    total_cost_usd = total_area_mm2 * ACRYLIC_COST_PER_MM2
+    estimated_cut_time_minutes = (total_perimeter_mm / LASER_CUT_SPEED_MM_S) / 60
 
     return {
         "total_area_mm2": total_area_mm2,

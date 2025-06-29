@@ -4,6 +4,7 @@ import ezdxf
 from ezdxf.addons.drawing import RenderContext, Frontend
 from ezdxf.addons.drawing.svg import SVGBackend
 from ezdxf.addons.drawing.layout import Page, Units
+from config import *
 
 # Define paths
 OUTPUT_DIR = "./renderings"
@@ -52,7 +53,7 @@ def convert_dxf_to_svg(dxf_file, output_svg):
     except Exception as e:
         print(f"Error converting {dxf_file} to SVG: {e}")
 
-def convert_svg_to_png(svg_file, output_png, width=800, height=600):
+def convert_svg_to_png(svg_file, output_png, width=RENDERING_IMAGE_WIDTH, height=RENDERING_IMAGE_HEIGHT):
     print(f"Converting {svg_file} to {output_png}...")
     command = ["convert", svg_file, "-resize", f"{width}x{height}", output_png]
     try:
@@ -68,12 +69,12 @@ if __name__ == "__main__":
     render_openscad_model(
         "esp32_footswitch_case_base.scad", 
         os.path.join(OUTPUT_DIR, "esp32_footswitch_case_base.png"),
-        camera_params="0,0,0,45,0,45,100" # Example camera position
+        camera_params=RENDERING_CAMERA_PARAMS_3D
     )
     render_openscad_model(
         "esp32_footswitch_case_lid.scad", 
         os.path.join(OUTPUT_DIR, "esp32_footswitch_case_lid.png"),
-        camera_params="0,0,0,45,0,45,100" # Example camera position
+        camera_params=RENDERING_CAMERA_PARAMS_3D
     )
 
     # Convert laser-cut case (DXF) to SVG and then to PNG

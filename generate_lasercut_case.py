@@ -1,41 +1,8 @@
 import ezdxf
+from config import *
 
 # Case parameters
-CASE_LENGTH = 150  # Overall length of the case
-CASE_WIDTH = 100   # Overall width of the case
-CASE_HEIGHT = 30   # Overall height of the case
-MATERIAL_THICKNESS = 3 # Thickness of the acrylic material
-FINGER_JOINT_SIZE = 10 # Size of each finger in the joint
-
-# Board dimensions (LOLIN S3 Mini)
-BOARD_LENGTH = 34.3
-BOARD_WIDTH = 25.4
-
-# Footswitch parameters
-FOOTSWITCH_MOUNT_DIAMETER = 12 # Diameter of the hole for mounting the footswitch
-FOOTSWITCH_CAP_DIAMETER = 16   # Diameter of the footswitch cap (for spacing)
-
-# Button parameters (for the 7 buttons)
-BUTTON_HOLE_DIAMETER = 6 # Diameter of the hole for the small buttons
-BUTTON_SPACING = 15      # Spacing between small buttons
-
-# USB-C port dimensions (approximate)
-USB_C_WIDTH = 10
-USB_C_HEIGHT = 5
-USB_C_OFFSET_FROM_BOTTOM = 5 # Offset from the bottom edge of the side panel
-
-# LED hole diameter
-LED_HOLE_DIAMETER = 3
-LED_OFFSET_X = 10 # Offset from edge for LED hole
-LED_OFFSET_Y = 10 # Offset from edge for LED hole
-
-# Screw hole parameters for assembly
-SCREW_DIAMETER = 3.2 # For M3 screws (slightly larger for clearance)
-SCREW_OFFSET = 5     # Distance from corner for screw holes
-
-# Standoff parameters for board mounting (holes in bottom plate)
-BOARD_STANDOFF_SCREW_DIAMETER = 2.5 # For M2.5 or M3 screws
-BOARD_STANDOFF_OFFSET_FROM_EDGE = 5 # Distance from board edge to mounting hole center
+# All parameters are now imported from config.py
 
 def create_finger_joints(length, thickness, joint_size, is_male=True):
     joints = []
@@ -92,9 +59,9 @@ def generate_lasercut_case():
     msp_top.add_lwpolyline([(0,0), (CASE_LENGTH,0), (CASE_LENGTH,CASE_WIDTH), (0,CASE_WIDTH), (0,0)], close=True)
 
     # Footswitch holes on top plate
-    total_footswitch_width = 7 * FOOTSWITCH_CAP_DIAMETER + 6 * BUTTON_SPACING
+    total_footswitch_width = NUM_BUTTONS * FOOTSWITCH_CAP_DIAMETER + (NUM_BUTTONS - 1) * BUTTON_SPACING
     start_x = (CASE_LENGTH - total_footswitch_width) / 2 + FOOTSWITCH_CAP_DIAMETER / 2
-    for i in range(7):
+    for i in range(NUM_BUTTONS):
         hole_pos_x = start_x + i * (FOOTSWITCH_CAP_DIAMETER + BUTTON_SPACING)
         msp_top.add_circle((hole_pos_x, CASE_WIDTH / 2), FOOTSWITCH_MOUNT_DIAMETER / 2)
 
@@ -120,7 +87,7 @@ def generate_lasercut_case():
     msp_bottom.add_lwpolyline([(0,0), (CASE_LENGTH,0), (CASE_LENGTH,CASE_WIDTH), (0,CASE_WIDTH), (0,0)], close=True)
 
     # Board mounting holes on bottom plate
-    board_offset_from_edge = BOARD_STANDOFF_OFFSET_FROM_EDGE
+    board_offset_from_edge = 5
     board_mounting_hole_positions = [
         ( (CASE_LENGTH / 2) - (BOARD_LENGTH / 2) + board_offset_from_edge,
           (CASE_WIDTH / 2) - (BOARD_WIDTH / 2) + board_offset_from_edge ),

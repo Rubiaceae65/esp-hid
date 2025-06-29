@@ -1,15 +1,6 @@
 import os
 import graphviz
-
-# Define the number of buttons
-NUM_BUTTONS = 7
-
-# Define the ESP32 GPIO pins for the buttons (adjust as needed)
-# These should match the PIN_ defines in your main.cpp
-BUTTON_GPIO_PINS = [4, 5, 6, 7, 8, 9, 10]
-
-# Button and layout parameters
-BUTTON_SPACING = 15 # Spacing between buttons in mm
+from config import *
 
 # --- Netlist Generation ---
 def generate_button_pcb_netlist():
@@ -60,7 +51,7 @@ def generate_button_pcb_netlist():
     # Button to GND (assuming J1-Pin8 is GND)
     netlist_content += f"    (net (code {NUM_BUTTONS+1})\n"
     netlist_content += f"      (name \"GND\")\n"
-    netlist_content += f"      (node (ref J1) (pin 8))\n"
+        netlist_content += f"      (node (ref J1) (pin 8))\n"
     for i in range(NUM_BUTTONS):
         netlist_content += f"      (node (ref SW{i+1}) (pin 2))\n"
     netlist_content += "    )\n"

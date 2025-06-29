@@ -23,37 +23,43 @@ RENDER_LASERCUT_FRONT_BACK_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_front_ba
 RENDER_LASERCUT_LEFT_RIGHT_SVG := $(RENDERINGS_DIR)/esp32_lasercut_case_left_right.svg
 NETLIST_FILE := button_pcb.net
 LAYOUT_FILE := button_pcb_layout.txt
+CONFIG_H := config.h
 
 # Default target: build firmware and generate all case files and renderings
 all: firmware 3d_case lasercut_case renderings bom_estimates pcb_design
 
 # Target to build the ESP32 firmware
-firmware:
+firmware: $(CONFIG_H)
 	@echo "Building firmware..."
 	/home/user/.local/bin/pio run
 
+# Target to generate config.h
+$(CONFIG_H): generate_firmware_config.py config.py
+	@echo "Generating firmware config header..."
+	$(PYTHON) generate_firmware_config.py
+
 # Target to generate 3D printable case files (.scad)
-3d_case: generate_case.py
+3d_case: generate_case.py config.py
 	@echo "Generating 3D printable case files..."
 	$(PYTHON) generate_case.py
 
 # Target to generate laser-cut case files (.dxf)
-lasercut_case: generate_lasercut_case.py
+lasercut_case: generate_lasercut_case.py config.py
 	@echo "Generating laser-cut case files..."
 	$(PYTHON) generate_lasercut_case.py
 
 # Target to generate image renderings for the README
-renderings: $(RENDERINGS_DIR) $(SCAD_BASE) $(SCAD_LID) $(DXF_TOP) $(DXF_BOTTOM) $(DXF_FRONT_BACK) $(DXF_LEFT_RIGHT) render_cases.py
+renderings: $(RENDERINGS_DIR) $(SCAD_BASE) $(SCAD_LID) $(DXF_TOP) $(DXF_BOTTOM) $(DXF_FRONT_BACK) $(DXF_LEFT_RIGHT) render_cases.py config.py
 	@echo "Generating case renderings..."
 	$(PYTHON) render_cases.py
 
 # Target to generate BOM and estimates
-bom_estimates: generate_bom_and_estimates.py
+bom_estimates: generate_bom_and_estimates.py config.py
 	@echo "Generating BOM and estimates..."
 	$(PYTHON) generate_bom_and_estimates.py
 
 # Target to generate PCB design files
-pcb_design: generate_button_pcb.py
+pcb_design: generate_button_pcb.py config.py
 	@echo "Generating PCB design files..."
 	$(PYTHON) generate_button_pcb.py
 
@@ -66,7 +72,7 @@ clean:
 	@echo "Cleaning up generated files..."
 	rm -f $(SCAD_BASE) $(SCAD_LID)
 	rm -f $(DXF_TOP) $(DXF_BOTTOM) $(DXF_FRONT_BACK) $(DXF_LEFT_RIGHT)
-	rm -f $(NETLIST_FILE) $(LAYOUT_FILE)
+	rm -f $(NETLIST_FILE) $(LAYOUT_FILE) $(CONFIG_H)
 	rm -rf $(RENDERINGS_DIR)
 	/home/user/.local/bin/pio run --target clean
 	rm -rf venv

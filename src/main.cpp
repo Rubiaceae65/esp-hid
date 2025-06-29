@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include "config.h"
 
 #include "USB.h"
 #include "USBHIDMouse.h"
@@ -6,14 +7,7 @@
 #include <BleMouse.h>
 
 // Pin definitions for buttons
-#define PIN_ENTER      4
-#define PIN_ESC        5
-#define PIN_PAGE_UP    6
-#define PIN_PAGE_DOWN  7
-#define PIN_MACRO_1    8
-#define PIN_MACRO_2    9
-#define PIN_MACRO_3    10
-#define PIN_LED        LED_BUILTIN
+// All PIN definitions are now in config.h
 
 // Button state and debounce
 struct Button {
@@ -34,10 +28,10 @@ Button buttons[] = {
     {PIN_MACRO_3, 7, true, 0, false}
 };
 
-#define DEBOUNCE_MS 50
+// DEBOUNCE_MS is now in config.h
 
-BleKeyboard bleKeyboard("ESP32-S3 Keyboard");
-BleMouse bleMouse("ESP32-S3 Mouse");
+BleKeyboard bleKeyboard(BLE_KEYBOARD_NAME);
+BleMouse bleMouse(BLE_MOUSE_NAME);
 
 #include "USBHIDKeyboard.h"
 #include "USBHIDGamepad.h"
@@ -114,7 +108,6 @@ static void usbEventCallback(void *arg, esp_event_base_t event_base, int32_t eve
 
 void setup() {
   Serial.begin(115200);
-  Serial.setDebugOutput(true);
 
   // Setup buttons
   for (auto& btn : buttons) {
@@ -172,9 +165,9 @@ void handle_buttons() {
                             case PIN_ESC: bleKeyboard.write(KEY_ESC); break;
                             case PIN_PAGE_UP: bleKeyboard.write(KEY_PAGE_UP); break;
                             case PIN_PAGE_DOWN: bleKeyboard.write(KEY_PAGE_DOWN); break;
-                            case PIN_MACRO_1: bleKeyboard.print("Macro 1 Output"); break;
-                            case PIN_MACRO_2: bleKeyboard.print("Macro 2 Output"); break;
-                            case PIN_MACRO_3: bleKeyboard.print("Macro 3 Output"); break;
+                            case PIN_MACRO_1: bleKeyboard.print(MACRO_1_OUTPUT); break;
+                            case PIN_MACRO_2: bleKeyboard.print(MACRO_2_OUTPUT); break;
+                            case PIN_MACRO_3: bleKeyboard.print(MACRO_3_OUTPUT); break;
                         }
                     } else if (HID.ready()) {
                         switch (btn.PIN) {
@@ -182,9 +175,9 @@ void handle_buttons() {
                             case PIN_ESC: Keyboard.write(KEY_ESC); break;
                             case PIN_PAGE_UP: Keyboard.write(KEY_PAGE_UP); break;
                             case PIN_PAGE_DOWN: Keyboard.write(KEY_PAGE_DOWN); break;
-                            case PIN_MACRO_1: Keyboard.print("Macro 1 Output"); break;
-                            case PIN_MACRO_2: Keyboard.print("Macro 2 Output"); break;
-                            case PIN_MACRO_3: Keyboard.print("Macro 3 Output"); break;
+                            case PIN_MACRO_1: Keyboard.print(MACRO_1_OUTPUT); break;
+                            case PIN_MACRO_2: Keyboard.print(MACRO_2_OUTPUT); break;
+                            case PIN_MACRO_3: Keyboard.print(MACRO_3_OUTPUT); break;
                         }
                     }
                 }
