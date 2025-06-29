@@ -106,25 +106,23 @@ To generate the case models, you need Python and the `solidpython` and `ezdxf` l
 
 ### Renderings for README
 
-To generate PNG renderings of the case parts for display in this README, run the following script:
+To generate PNG renderings of all case parts for display in this README, run the following script:
 
 ```bash
 ./venv/bin/python render_cases.py
 ```
-
-This will create PNG images for the 3D printable parts and SVG images for the laser-cut parts in the `renderings/` directory. If you need PNGs for the laser-cut parts, you can convert the SVG files using a tool like Inkscape.
 
 **3D Printable Case Renderings:**
 
 ![3D Printable Case Base](renderings/esp32_footswitch_case_base.png)
 ![3D Printable Case Lid](renderings/esp32_footswitch_case_lid.png)
 
-**Laser-Cut Case Renderings (SVG - convert to PNG for direct display):**
+**Laser-Cut Case Renderings:**
 
-![Laser-Cut Case Top](renderings/esp32_lasercut_case_top.svg)
-![Laser-Cut Case Bottom](renderings/esp32_lasercut_case_bottom.svg)
-![Laser-Cut Case Front/Back](renderings/esp32_lasercut_case_front_back.svg)
-![Laser-Cut Case Left/Right](renderings/esp32_lasercut_case_left_right.svg)
+![Laser-Cut Case Top](renderings/esp32_lasercut_case_top.png)
+![Laser-Cut Case Bottom](renderings/esp32_lasercut_case_bottom.png)
+![Laser-Cut Case Front/Back](renderings/esp32_lasercut_case_front_back.png)
+![Laser-Cut Case Left/Right](renderings/esp32_lasercut_case_left_right.png)
 
 ## Usage
 
