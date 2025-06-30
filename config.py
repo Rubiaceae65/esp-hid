@@ -62,6 +62,7 @@ SCREW_DIAMETER = 3.2 # For M3 screws (slightly larger for clearance)
 SCREW_HEAD_DIAMETER = 6 # For countersunk or pan head screws
 SCREW_HOLE_DEPTH = 5 # Depth of screw hole in base
 LID_SCREW_STANDOFF_HEIGHT = 5 # Height of standoffs for lid screws in the base
+SCREW_OFFSET = 5 # Distance from corner for screw holes
 
 # Finger joint parameters for laser cut case
 FINGER_JOINT_SIZE = 10 # Size of each finger in the joint
@@ -77,7 +78,7 @@ ACRYLIC_COST_PER_MM2 = 0.0001 # Very rough cost per mm^2 for 3mm acrylic
 
 # --- PCB Design Parameters (used in generate_button_pcb.py) ---
 NUM_BUTTONS = 7
-# BUTTON_GPIO_PINS are defined above with firmware parameters
+BUTTON_GPIO_PINS = [4, 5, 6, 7, 8, 9, 10] # GPIO pins for the buttons
 
 # --- Rendering Parameters (used in render_cases.py) ---
 RENDERING_CAMERA_PARAMS_3D = "0,0,0,45,0,45,100" # OpenSCAD camera position for 3D models

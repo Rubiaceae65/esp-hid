@@ -51,7 +51,7 @@ lasercut_case: generate_lasercut_case.py config.py $(VENV_DIR)
 	$(PYTHON) generate_lasercut_case.py
 
 # Target to generate image renderings for the README
-renderings: $(RENDERINGS_DIR) $(SCAD_BASE) $(SCAD_LID) $(DXF_TOP) $(DXF_BOTTOM) $(DXF_FRONT_BACK) $(DXF_LEFT_RIGHT) render_cases.py config.py $(VENV_DIR)
+renderings: $(RENDERINGS_DIR) render_cases.py config.py $(VENV_DIR)
 	@echo "Generating case renderings..."
 	$(PYTHON) render_cases.py
 

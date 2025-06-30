@@ -1,5 +1,5 @@
 import ezdxf
-from config import *
+import config
 
 # Case parameters
 # All parameters are now imported from config.py
@@ -52,31 +52,31 @@ def create_panel(doc, name, width, height, top_joints=None, bottom_joints=None, 
 
     return msp
 
-def generate_lasercut_case(case_length, case_width, case_height, wall_thickness, material_thickness, num_buttons, footswitch_cap_diameter, button_spacing, footswitch_mount_diameter, led_offset_x, led_offset_y, led_hole_diameter, screw_offset, screw_diameter, board_length, board_width, board_standoff_screw_diameter, usb_c_width, usb_c_height, usb_c_offset_from_bottom):
+def generate_lasercut_case(cfg):
     # Top Plate
     doc_top = ezdxf.new("R2010")
     msp_top = doc_top.modelspace()
-    msp_top.add_lwpolyline([(0,0), (case_length,0), (case_length,case_width), (0,case_width), (0,0)], close=True)
+    msp_top.add_lwpolyline([(0,0), (cfg.CASE_LENGTH,0), (cfg.CASE_LENGTH,cfg.CASE_WIDTH), (0,cfg.CASE_WIDTH), (0,0)], close=True)
 
     # Footswitch holes on top plate
-    total_footswitch_width = num_buttons * footswitch_cap_diameter + (num_buttons - 1) * button_spacing
-    start_x = (case_length - total_footswitch_width) / 2 + footswitch_cap_diameter / 2
-    for i in range(num_buttons):
-        hole_pos_x = start_x + i * (footswitch_cap_diameter + button_spacing)
-        msp_top.add_circle((hole_pos_x, case_width / 2), footswitch_mount_diameter / 2)
+    total_footswitch_width = cfg.NUM_BUTTONS * cfg.FOOTSWITCH_CAP_DIAMETER + (cfg.NUM_BUTTONS - 1) * cfg.BUTTON_SPACING
+    start_x = (cfg.CASE_LENGTH - total_footswitch_width) / 2 + cfg.FOOTSWITCH_CAP_DIAMETER / 2
+    for i in range(cfg.NUM_BUTTONS):
+        hole_pos_x = start_x + i * (cfg.FOOTSWITCH_CAP_DIAMETER + cfg.BUTTON_SPACING)
+        msp_top.add_circle((hole_pos_x, cfg.CASE_WIDTH / 2), cfg.FOOTSWITCH_MOUNT_DIAMETER / 2)
 
     # LED hole on top plate
-    msp_top.add_circle((case_length - led_offset_x, case_width - led_offset_y), led_hole_diameter / 2)
+    msp_top.add_circle((cfg.CASE_LENGTH - cfg.LED_OFFSET_X, cfg.CASE_WIDTH - cfg.LED_OFFSET_Y), cfg.LED_HOLE_DIAMETER / 2)
 
     # Screw holes for lid assembly
     screw_positions = [
-        (screw_offset, screw_offset),
-        (case_length - screw_offset, screw_offset),
-        (screw_offset, case_width - screw_offset),
-        (case_length - screw_offset, case_width - screw_offset)
+        (cfg.SCREW_OFFSET, cfg.SCREW_OFFSET),
+        (cfg.CASE_LENGTH - cfg.SCREW_OFFSET, cfg.SCREW_OFFSET),
+        (cfg.SCREW_OFFSET, cfg.CASE_WIDTH - cfg.SCREW_OFFSET),
+        (cfg.CASE_LENGTH - cfg.SCREW_OFFSET, cfg.CASE_WIDTH - cfg.SCREW_OFFSET)
     ]
     for x, y in screw_positions:
-        msp_top.add_circle((x, y), screw_diameter / 2)
+        msp_top.add_circle((x, y), cfg.SCREW_DIAMETER / 2)
 
     doc_top.saveas("esp32_lasercut_case_top.dxf")
     print("Generated esp32_lasercut_case_top.dxf")
@@ -84,26 +84,26 @@ def generate_lasercut_case(case_length, case_width, case_height, wall_thickness,
     # Bottom Plate
     doc_bottom = ezdxf.new("R2010")
     msp_bottom = doc_bottom.modelspace()
-    msp_bottom.add_lwpolyline([(0,0), (case_length,0), (case_length,case_width), (0,case_width), (0,0)], close=True)
+    msp_bottom.add_lwpolyline([(0,0), (cfg.CASE_LENGTH,0), (cfg.CASE_LENGTH,cfg.CASE_WIDTH), (0,cfg.CASE_WIDTH), (0,0)], close=True)
 
     # Board mounting holes on bottom plate
     board_offset_from_edge = 5
     board_mounting_hole_positions = [
-        ( (case_length / 2) - (board_length / 2) + board_offset_from_edge,
-          (case_width / 2) - (board_width / 2) + board_offset_from_edge ),
-        ( (case_length / 2) + (board_length / 2) - board_offset_from_edge,
-          (case_width / 2) - (board_width / 2) + board_offset_from_edge ),
-        ( (case_length / 2) - (board_length / 2) + board_offset_from_edge,
-          (case_width / 2) + (board_width / 2) - board_offset_from_edge ),
-        ( (case_length / 2) + (board_length / 2) - board_offset_from_edge,
-          (case_width / 2) + (board_width / 2) - board_offset_from_edge )
+        ( (cfg.CASE_LENGTH / 2) - (cfg.BOARD_LENGTH / 2) + board_offset_from_edge,
+          (cfg.CASE_WIDTH / 2) - (cfg.BOARD_WIDTH / 2) + board_offset_from_edge ),
+        ( (cfg.CASE_LENGTH / 2) + (cfg.BOARD_LENGTH / 2) - board_offset_from_edge,
+          (cfg.CASE_WIDTH / 2) - (cfg.BOARD_WIDTH / 2) + board_offset_from_edge ),
+        ( (cfg.CASE_LENGTH / 2) - (cfg.BOARD_LENGTH / 2) + board_offset_from_edge,
+          (cfg.CASE_WIDTH / 2) + (cfg.BOARD_WIDTH / 2) - board_offset_from_edge ),
+        ( (cfg.CASE_LENGTH / 2) + (cfg.BOARD_LENGTH / 2) - board_offset_from_edge,
+          (cfg.CASE_WIDTH / 2) + (cfg.BOARD_WIDTH / 2) - board_offset_from_edge )
     ]
     for x, y in board_mounting_hole_positions:
-        msp_bottom.add_circle((x, y), board_standoff_screw_diameter / 2)
+        msp_bottom.add_circle((x, y), cfg.BOARD_STANDOFF_SCREW_DIAMETER / 2)
 
     # Screw holes for lid assembly (matching top plate)
     for x, y in screw_positions:
-        msp_bottom.add_circle((x, y), screw_diameter / 2)
+        msp_bottom.add_circle((x, y), cfg.SCREW_DIAMETER / 2)
 
     doc_bottom.saveas("esp32_lasercut_case_bottom.dxf")
     print("Generated esp32_lasercut_case_bottom.dxf")
@@ -112,14 +112,14 @@ def generate_lasercut_case(case_length, case_width, case_height, wall_thickness,
     # Front/Back panels
     doc_front_back = ezdxf.new("R2010")
     msp_front_back = doc_front_back.modelspace()
-    msp_front_back.add_lwpolyline([(0,0), (case_length,0), (case_length,case_height), (0,case_height), (0,0)], close=True)
+    msp_front_back.add_lwpolyline([(0,0), (cfg.CASE_LENGTH,0), (cfg.CASE_LENGTH,cfg.CASE_HEIGHT), (0,cfg.CASE_HEIGHT), (0,0)], close=True)
     # USB-C cutout on one of the front/back panels (e.g., front)
     msp_front_back.add_lwpolyline([
-        (case_length / 2 - usb_c_width / 2, usb_c_offset_from_bottom),
-        (case_length / 2 + usb_c_width / 2, usb_c_offset_from_bottom),
-        (case_length / 2 + usb_c_width / 2, usb_c_offset_from_bottom + usb_c_height),
-        (case_length / 2 - usb_c_width / 2, usb_c_offset_from_bottom + usb_c_height),
-        (case_length / 2 - usb_c_width / 2, usb_c_offset_from_bottom)
+        (cfg.CASE_LENGTH / 2 - cfg.USB_C_WIDTH / 2, cfg.USB_C_OFFSET_FROM_BOTTOM),
+        (cfg.CASE_LENGTH / 2 + cfg.USB_C_WIDTH / 2, cfg.USB_C_OFFSET_FROM_BOTTOM),
+        (cfg.CASE_LENGTH / 2 + cfg.USB_C_WIDTH / 2, cfg.USB_C_OFFSET_FROM_BOTTOM + cfg.USB_C_HEIGHT),
+        (cfg.CASE_LENGTH / 2 - cfg.USB_C_WIDTH / 2, cfg.USB_C_OFFSET_FROM_BOTTOM + cfg.USB_C_HEIGHT),
+        (cfg.CASE_LENGTH / 2 - cfg.USB_C_WIDTH / 2, cfg.USB_C_OFFSET_FROM_BOTTOM)
     ], close=True)
     doc_front_back.saveas("esp32_lasercut_case_front_back.dxf")
     print("Generated esp32_lasercut_case_front_back.dxf")
@@ -127,14 +127,9 @@ def generate_lasercut_case(case_length, case_width, case_height, wall_thickness,
     # Left/Right panels
     doc_left_right = ezdxf.new("R2010")
     msp_left_right = doc_left_right.modelspace()
-    msp_left_right.add_lwpolyline([(0,0), (case_width,0), (case_width,case_height), (0,case_height), (0,0)], close=True)
+    msp_left_right.add_lwpolyline([(0,0), (cfg.CASE_WIDTH,0), (cfg.CASE_WIDTH,cfg.CASE_HEIGHT), (0,cfg.CASE_HEIGHT), (0,0)], close=True)
     doc_left_right.saveas("esp32_lasercut_case_left_right.dxf")
     print("Generated esp32_lasercut_case_left_right.dxf")
 
 if __name__ == '__main__':
-    generate_lasercut_case(
-        CASE_LENGTH, CASE_WIDTH, CASE_HEIGHT, WALL_THICKNESS, MATERIAL_THICKNESS,
-        NUM_BUTTONS, FOOTSWITCH_CAP_DIAMETER, BUTTON_SPACING, FOOTSWITCH_MOUNT_DIAMETER,
-        LED_OFFSET_X, LED_OFFSET_Y, LED_HOLE_DIAMETER, SCREW_OFFSET, SCREW_DIAMETER,
-        BOARD_LENGTH, BOARD_WIDTH, BOARD_STANDOFF_SCREW_DIAMETER, USB_C_WIDTH, USB_C_HEIGHT, USB_C_OFFSET_FROM_BOTTOM
-    )
+    generate_lasercut_case(config)

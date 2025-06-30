@@ -4,7 +4,7 @@ import ezdxf
 from ezdxf.addons.drawing import RenderContext, Frontend
 from ezdxf.addons.drawing.svg import SVGBackend
 from ezdxf.addons.drawing.layout import Page, Units
-from config import *
+import config
 
 # Define paths
 OUTPUT_DIR = "./renderings"
@@ -53,7 +53,7 @@ def convert_dxf_to_svg(dxf_file, output_svg):
     except Exception as e:
         print(f"Error converting {dxf_file} to SVG: {e}")
 
-def convert_svg_to_png(svg_file, output_png, width=RENDERING_IMAGE_WIDTH, height=RENDERING_IMAGE_HEIGHT):
+def convert_svg_to_png(svg_file, output_png, width=config.RENDERING_IMAGE_WIDTH, height=config.RENDERING_IMAGE_HEIGHT):
     print(f"Converting {svg_file} to {output_png}...")
     command = ["convert", svg_file, "-resize", f"{width}x{height}", output_png]
     try:
@@ -68,21 +68,21 @@ if __name__ == "__main__":
     # Render 3D printable case (OpenSCAD)
     render_openscad_model(
         "esp32_footswitch_case_base.scad", 
-        os.path.join(OUTPUT_DIR, "esp32_footswitch_case_base.png"),
-        camera_params=RENDERING_CAMERA_PARAMS_3D
+        os.path.join(config.OUTPUT_DIR, "esp32_footswitch_case_base.png"),
+        camera_params=config.RENDERING_CAMERA_PARAMS_3D
     )
     render_openscad_model(
         "esp32_footswitch_case_lid.scad", 
-        os.path.join(OUTPUT_DIR, "esp32_footswitch_case_lid.png"),
-        camera_params=RENDERING_CAMERA_PARAMS_3D
+        os.path.join(config.OUTPUT_DIR, "esp32_footswitch_case_lid.png"),
+        camera_params=config.RENDERING_CAMERA_PARAMS_3D
     )
 
     # Convert laser-cut case (DXF) to SVG and then to PNG
     svg_files = []
-    svg_files.append(("esp32_lasercut_case_top.dxf", os.path.join(OUTPUT_DIR, "esp32_lasercut_case_top.svg")))
-    svg_files.append(("esp32_lasercut_case_bottom.dxf", os.path.join(OUTPUT_DIR, "esp32_lasercut_case_bottom.svg")))
-    svg_files.append(("esp32_lasercut_case_front_back.dxf", os.path.join(OUTPUT_DIR, "esp32_lasercut_case_front_back.svg")))
-    svg_files.append(("esp32_lasercut_case_left_right.dxf", os.path.join(OUTPUT_DIR, "esp32_lasercut_case_left_right.svg")))
+    svg_files.append(("esp32_lasercut_case_top.dxf", os.path.join(config.OUTPUT_DIR, "esp32_lasercut_case_top.svg")))
+    svg_files.append(("esp32_lasercut_case_bottom.dxf", os.path.join(config.OUTPUT_DIR, "esp32_lasercut_case_bottom.svg")))
+    svg_files.append(("esp32_lasercut_case_front_back.dxf", os.path.join(config.OUTPUT_DIR, "esp32_lasercut_case_front_back.svg")))
+    svg_files.append(("esp32_lasercut_case_left_right.dxf", os.path.join(config.OUTPUT_DIR, "esp32_lasercut_case_left_right.svg")))
 
     for dxf_file, svg_file in svg_files:
         convert_dxf_to_svg(dxf_file, svg_file)
